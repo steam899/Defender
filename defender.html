@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusat Keselamatan & Defender Peranti</title>
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-main: #c9d1d9;
+            --danger: #ff4444;
+        }
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: var(--primary);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,255,204,0.1);
+        }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #30363d;
+            padding-bottom: 5px;
+        }
+        .highlight {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .map-container {
+            width: 100%;
+            height: 400px;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: var(--primary);
+            color: var(--bg-color);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background-color: rgba(0, 255, 204, 0.2);
+            color: var(--primary);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🛡️ Pusat Keselamatan Peranti</h1>
+    
+    <div class="grid">
+        <!-- Bahagian Maklumat Peranti & Rangkaian -->
+        <div class="card">
+            <h2>Maklumat Sistem & Rangkaian</h2>
+            <div class="data-row">
+                <span>Status Rangkaian:</span>
+                <span id="status" class="status-badge">MENYAMBUNG...</span>
+            </div>
+            <div class="data-row">
+                <span>Alamat IP Awam:</span>
+                <span id="ip-address" class="highlight">Mengesan...</span>
+            </div>
+            <div class="data-row">
+                <span>Sistem Operasi:</span>
+                <span id="os-info" class="highlight">Mengesan...</span>
+            </div>
+            <div class="data-row">
+                <span>Pelayar Web:</span>
+                <span id="browser-info" class="highlight">Mengesan...</span>
+            </div>
+            <p style="font-size: 12px; color: #8b949e; margin-top: 20px;">
+                *Nota: Pelayar web tidak dapat membaca saiz penggunaan data bimbit (GB) secara terus atas sebab keselamatan.
+            </p>
+        </div>
+
+        <!-- Bahagian Pemasangan/Kawalan -->
+        <div class="card">
+            <h2>Panel Kawalan Defender</h2>
+            <p>Pasang atau kemas kini perlindungan peranti anda dari sumber rasmi:</p>
+            <!-- Pautan ini akan membawa pengguna ke Play Store atau App Store rasmi -->
+            <a href="https://play.google.com/store/search?q=antivirus&c=apps" target="_blank" class="btn">Muat Turun Defender (Android)</a>
+            <a href="https://apps.apple.com/us/search?term=security" target="_blank" class="btn">Muat Turun Defender (iOS)</a>
+            <button class="btn" onclick="alert('Untuk keselamatan terbaik, sila pastikan perisian OS telefon anda sentiasa dikemas kini di bahagian Settings > System Update.')">Semak Kemas Kini Sistem</button>
+        </div>
+    </div>
+
+    <!-- Bahagian Peta Ancaman Siber -->
+    <div class="card" style="margin-top: 20px;">
+        <h2>🌐 Peta Ancaman Siber Global (Live)</h2>
+        <p style="text-align: center; color: #8b949e;">Memaparkan serangan siber yang sedang berlaku di seluruh dunia pada masa nyata.</p>
+        <div class="map-container">
+            <!-- Iframe ini memaparkan widget dari peta keselamatan awam (contoh: Kaspersky) -->
+            <iframe src="https://cybermap.kaspersky.com/en/widget/dynamic/dark" title="Peta Ancaman Siber Global"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Kenal pasti IP menggunakan API awam percuma (ipify)
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('ip-address').innerText = data.ip;
+        })
+        .catch(error => {
+            document.getElementById('ip-address').innerText = "Gagal dikesan";
+            document.getElementById('ip-address').style.color = "var(--danger)";
+        });
+
+    // 2. Kenal pasti Sistem Operasi asas (OS)
+    function getOS() {
+        let userAgent = window.navigator.userAgent;
+        let os = "Tidak Diketahui";
+        if (userAgent.indexOf("Win") !== -1) os = "Windows";
+        if (userAgent.indexOf("Mac") !== -1) os = "MacOS / iOS";
+        if (userAgent.indexOf("X11") !== -1) os = "UNIX";
+        if (userAgent.indexOf("Linux") !== -1) os = "Linux / Android";
+        if (/Android/.test(userAgent)) os = "Android";
+        if (/iPhone|iPad|iPod/.test(userAgent)) os = "iOS";
+        return os;
+    }
+    document.getElementById('os-info').innerText = getOS();
+
+    // 3. Status sambungan internet
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('status');
+        if (navigator.onLine) {
+            statusElement.innerText = "ONLINE (SELAMAT)";
+            statusElement.style.backgroundColor = "rgba(0, 255, 204, 0.2)";
+            statusElement.style.color = "var(--primary)";
+        } else {
+            statusElement.innerText = "OFFLINE";
+            statusElement.style.backgroundColor = "rgba(255, 68, 68, 0.2)";
+            statusElement.style.color = "var(--danger)";
+        }
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus(); // Semak status semasa
+
+    // 4. Maklumat pelayar (ringkas)
+    document.getElementById('browser-info').innerText = navigator.appName + " (Cookies: " + navigator.cookieEnabled + ")";
+</script>
+
+</body>
+</html>
